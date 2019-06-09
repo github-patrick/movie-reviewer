@@ -21,6 +21,7 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class User {
 
@@ -34,7 +35,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-    private boolean active;
+    private boolean enabled;
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
