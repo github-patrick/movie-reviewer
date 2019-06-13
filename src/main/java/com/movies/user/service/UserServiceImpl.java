@@ -2,6 +2,7 @@ package com.movies.user.service;
 
 import com.movies.user.domain.User;
 import com.movies.user.domain.UserDto;
+import com.movies.exception.EmailExistsException;
 import com.movies.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +23,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDto createUser(UserDto userDto) throws EmailExistsException  {
+
+        checkIfEmailExists(userDto.getEmail());
+
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -32,5 +36,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(Long id) {
         return null;
+    }
+
+
+    private void checkIfEmailExists(String email) throws EmailExistsException {
+        if (!userRepository.findByEmail(email).isPresent()) {
+            return;
+        } else {
+            throw new EmailExistsException("Email already exists. Use an alternative");
+        }
     }
 }

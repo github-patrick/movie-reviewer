@@ -20,5 +20,13 @@ public class RestResponseEntityExceptionHandler {
                 ex.getMessage(), ex.getLocalizedMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    @ExceptionHandler(value = { EmailExistsException.class})
+    protected ApiError handleExceptionEmailExistsException(Exception ex, WebRequest request) {
+        return new ApiError(new Timestamp(System.currentTimeMillis()).getTime(),HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(), ex.getLocalizedMessage());
+    }
+
 
 }

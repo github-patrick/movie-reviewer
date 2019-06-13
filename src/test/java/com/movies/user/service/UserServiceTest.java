@@ -39,7 +39,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void createUser() {
+    public void createUser() throws Exception {
 
         UserDto userDto = UserDto.builder().id(1L)
                 .email("jerry@google.com")

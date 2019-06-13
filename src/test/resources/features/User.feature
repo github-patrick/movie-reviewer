@@ -28,6 +28,7 @@ Feature: As a User
       |      | john.world@gmail.com | password123 | true       | USER | Name cannot be empty                      |
       | John | john.worldgmail      | password123 | true       | USER | Email must be a well formed email address |
       | John | john.world@gmail.com | passw       | true       | USER | Password length must be greater than 5    |
+      | John | john.world@gmail.com | password    | true       |      | Account type cannot be null               |
 
 
 
