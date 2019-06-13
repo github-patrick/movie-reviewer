@@ -10,6 +10,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -24,13 +26,16 @@ public class UserServiceTest {
 
     private ModelMapper modelMapper;
 
+    private PasswordEncoder passwordEncoder;
+
     @Mock
     private UserRepository userRepository;
 
     @Before
     public void setUp() {
         modelMapper = new ModelMapper();
-        userService = new UserServiceImpl(userRepository, modelMapper);
+        passwordEncoder = new BCryptPasswordEncoder();
+        userService = new UserServiceImpl(userRepository, modelMapper, passwordEncoder);
     }
 
     @Test
@@ -56,4 +61,5 @@ public class UserServiceTest {
         assertThat(userDtoCreated.getEmail(), is(userDto.getEmail()));
 
     }
+
 }

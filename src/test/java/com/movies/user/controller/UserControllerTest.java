@@ -57,6 +57,7 @@ public class UserControllerTest {
         assertThat(userDtoResponse.getEmail()).isEqualTo(userDto.getEmail());
     }
 
+
     @Test
     public void invalidUserEmailCreationAttempt() throws Exception {
 
