@@ -28,11 +28,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, Errors errors) throws ContentNotAllowedException {
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, Errors errors) throws Exception {
         if (errors.hasErrors()) {
             throw new ContentNotAllowedException(errors.getFieldError().getDefaultMessage());
             }
-
         return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 }

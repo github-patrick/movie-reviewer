@@ -5,9 +5,7 @@ import com.movies.rating.domain.RatingDto;
 import com.movies.review.domain.ReviewDto;
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto implements Serializable {
 
     private Long id;
@@ -32,9 +31,10 @@ public class UserDto implements Serializable {
     @Size(min=6, message = "{user.password.error}" )
     private String password;
 
-    private boolean enabled = true;
-    private AccountType accountType;
+    private boolean enabled;
 
+    @NotNull(message = "{user.accounttype.error}")
+    private AccountType accountType;
 
     private List<ReviewDto> reviews;
 

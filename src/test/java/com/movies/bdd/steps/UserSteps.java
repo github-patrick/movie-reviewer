@@ -51,7 +51,9 @@ public class UserSteps {
         switch (accountType) {
             case "USER" : userDto.setAccountType(AccountType.USER);
             break;
-            default: userDto.setAccountType(AccountType.ADMIN);
+            case "ADMIN" : userDto.setAccountType(AccountType.ADMIN);
+            break;
+            default: userDto.setAccountType(null);
         }
     }
 
