@@ -54,5 +54,6 @@ public class UserServiceTest {
 
         UserDto userDtoCreated = userService.createUser(userDto);
         assertThat(userDtoCreated.getEmail(), is(userDto.getEmail()));
+
     }
 }

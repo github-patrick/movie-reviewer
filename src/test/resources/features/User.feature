@@ -12,5 +12,23 @@ Feature: As a User
     And the user has an enabled flag of "true"
     And the user has an account type of "USER"
     When I register the user
-    Then I the user is registered
+    Then the user should be registered
+
+  Scenario Outline: Unsuccessful registration due to erroneous data
+    Given I have a user
+    And the user has a name of "<name>"
+    And the user has an email of "<email>"
+    And the user has a password of "<password>"
+    And the user has an enabled flag of "<is_enabled>"
+    And the user has an account type of "<type>"
+    When I register the user
+    Then the error message should be "<error_message>"
+    Examples:
+      | name | email                | password    | is_enabled | type | error_message                             |
+      |      | john.world@gmail.com | password123 | true       | USER | Name cannot be empty                      |
+      | John | john.worldgmail      | password123 | true       | USER | Email must be a well formed email address |
+      | John | john.world@gmail.com | passw       | true       | USER | Password length must be greater than 5    |
+
+
+
 
