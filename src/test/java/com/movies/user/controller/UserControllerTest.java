@@ -1,6 +1,7 @@
 package com.movies.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.movies.exception.ApiError;
 import com.movies.user.domain.AccountType;
 import com.movies.user.domain.UserDto;
 import com.movies.user.service.UserService;
@@ -14,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,6 +55,57 @@ public class UserControllerTest {
         assertThat(response.getStatus()).isEqualTo(201);
         UserDto userDtoResponse = new ObjectMapper().readValue(response.getContentAsString(), UserDto.class);
         assertThat(userDtoResponse.getEmail()).isEqualTo(userDto.getEmail());
+    }
+
+    @Test
+    public void invalidUserEmailCreationAttempt() throws Exception {
+
+        MockHttpServletResponse response = mockMvc.perform(post("http://localhost/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(new ObjectMapper().writeValueAsBytes(
+                        UserDto.builder().name("patrick").email("patgmail.com")
+                                .password("password").build()
+                ))).andDo(print())
+                .andReturn().getResponse();
+
+        ApiError apiError = new ObjectMapper().readValue(response.getContentAsString(), ApiError.class);
+
+        assertThat(apiError.getMessage()).isNotEmpty();
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    public void invalidUserPasswordCreationAttempt() throws Exception {
+
+        MockHttpServletResponse response = mockMvc.perform(post("http://localhost/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(new ObjectMapper().writeValueAsBytes(
+                        UserDto.builder().name("patrick").email("pat@gmail.com")
+                                .password("pass").build()
+                ))).andDo(print())
+                .andReturn().getResponse();
+
+        ApiError apiError = new ObjectMapper().readValue(response.getContentAsString(), ApiError.class);
+
+        assertThat(apiError.getMessage()).isNotEmpty();
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    public void invalidUserNameCreationAttempt() throws Exception {
+
+        MockHttpServletResponse response = mockMvc.perform(post("http://localhost/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(new ObjectMapper().writeValueAsBytes(
+                        UserDto.builder().name("").email("pat@gmail.com")
+                                .password("password").build()
+                ))).andDo(print())
+                .andReturn().getResponse();
+
+        ApiError apiError = new ObjectMapper().readValue(response.getContentAsString(), ApiError.class);
+
+        assertThat(apiError.getMessage()).isNotEmpty();
+        assertThat(response.getStatus()).isEqualTo(400);
     }
 
 }

@@ -1,19 +1,24 @@
 package com.movies.bdd.steps;
 
 import com.movies.bdd.utils.UserUtils;
+import com.movies.exception.ApiError;
 import com.movies.user.domain.AccountType;
 import com.movies.user.domain.UserDto;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import io.restassured.http.ContentType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 public class UserSteps {
 
     private UserDto userDto;
+
+    @Autowired
+    private Context context;
 
     @Given("I have a user")
     public void i_have_a_user() {
@@ -52,17 +57,19 @@ public class UserSteps {
 
     @When("I register the user")
     public void i_register_the_user() {
-        given().log().all()
-                .contentType(ContentType.JSON)
-                .body(userDto)
-        .when()
-                .post("users")
-        .then().log().all().statusCode(201);
+        context.setResponse(UserUtils.createUser(userDto));
+    }
+
+    @Then("the user should be registered")
+    public void the_user_should_be_registered() {
 
     }
 
-    @Then("I the user is registered")
-    public void i_the_user_is_registered() {
+    @Then("the error message should be {string}")
+    public void the_error_message_should_be(String errorMessage) {
+        ApiError apiErrorResponse = context.getResponse().as(ApiError.class);
+        assertThat(apiErrorResponse.getStatus()).isEqualTo(400);
+        assertThat(apiErrorResponse.getMessage()).isEqualTo(errorMessage);
 
     }
 }
