@@ -35,7 +35,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-    private boolean enabled;
+
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean enabled;
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
