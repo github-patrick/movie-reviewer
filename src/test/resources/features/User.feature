@@ -31,6 +31,27 @@ Feature: As a User
       | John | john.world@gmail.com | password    | true       |      | Account type cannot be null               |
 
 
+  Scenario Outline: Get all registered users
+    Given I have <number> registered users
+    When I get all registered
+    Then I should have <number> retrieved users
+    Examples:
+      | number |
+      | 4      |
+
+    Scenario: Get a registered user
+      Given I have 3 registered users
+      When I get the first registered user
+      Then I should have a retrieved the user
+
+    Scenario: An Attempt to get a user that does not exist
+      Given I have 2 registered users
+      When I get a user that does not exist
+      Then I should not have a retrieved user
+
+
+
+
 
 
 

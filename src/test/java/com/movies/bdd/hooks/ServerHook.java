@@ -8,7 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource("classpath:application-test.properties")
+import static io.restassured.RestAssured.given;
+
+@TestPropertySource("classpath:application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 public class ServerHook {
@@ -25,5 +27,10 @@ public class ServerHook {
 
         RestAssured.baseURI = baseURI;
         RestAssured.port = port;
+    }
+
+    @Before("@UserRegistration")
+    public void deleteUsers() {
+        given().when().delete("users");
     }
 }

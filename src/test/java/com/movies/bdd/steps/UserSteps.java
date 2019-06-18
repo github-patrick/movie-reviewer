@@ -3,11 +3,14 @@ package com.movies.bdd.steps;
 import com.movies.bdd.utils.UserUtils;
 import com.movies.exception.ApiError;
 import com.movies.user.domain.AccountType;
+import com.movies.user.domain.User;
 import com.movies.user.domain.UserDto;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -71,6 +74,48 @@ public class UserSteps {
         ApiError apiErrorResponse = context.getResponse().as(ApiError.class);
         assertThat(apiErrorResponse.getStatus()).isEqualTo(400);
         assertThat(apiErrorResponse.getMessage()).isEqualTo(errorMessage);
+    }
+
+
+    @Given("I have {int} registered users")
+    public void i_have_registered_users(Integer numberOfUsers) {
+        for (int i=0;i<numberOfUsers;i++) {
+            UserUtils.createMultipleUsers();
+        }
+    }
+
+    @When("I get all registered")
+    public void i_get_all_registered() {
+        UserUtils.getAllRegisteredUsers();
+    }
+
+    @Then("I should have {int} retrieved users")
+    public void i_should_have_retrieved_users(Integer numberOfUsers) {
+        List<UserDto> userDtoList = UserUtils.getAllRegisteredUsers();
+        assertThat(userDtoList.size()).isEqualTo(numberOfUsers);
+    }
+
+    @When("I get the first registered user")
+    public void i_get_the_first_registered_user() {
+        UserDto userDto = UserUtils.getFirstRegisteredUser();
+        assertThat(userDto).isNotNull();
+    }
+
+    @Then("I should have a retrieved the user")
+    public void i_should_have_a_retrieved_the_user() {
+        UserDto userDto = UserUtils.getFirstRegisteredUser();
+        assertThat(userDto).isNotNull();
+    }
+
+    @When("I get a user that does not exist")
+    public void i_get_a_user_that_does_not_exist() {
+        context.setResponse(UserUtils.getUserThatDoesNotExist());
+    }
+
+    @Then("I should not have a retrieved user")
+    public void i_should_not_have_a_retrieved_user() {
+        ApiError apiErrorResponse = context.getResponse().as(ApiError.class);
+        assertThat(apiErrorResponse.getMessage()).isEqualTo("User does not exist");
 
     }
 }
