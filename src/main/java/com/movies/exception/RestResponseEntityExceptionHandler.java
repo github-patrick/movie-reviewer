@@ -28,5 +28,13 @@ public class RestResponseEntityExceptionHandler {
                 ex.getMessage(), ex.getLocalizedMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    @ExceptionHandler(value = { UserDoesNotExistException.class})
+    protected ApiError handleUserDoesNotExistException(Exception ex, WebRequest request) {
+        return new ApiError(new Timestamp(System.currentTimeMillis()).getTime(),HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(), ex.getLocalizedMessage());
+    }
+
 
 }

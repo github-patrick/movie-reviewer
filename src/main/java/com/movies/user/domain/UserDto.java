@@ -1,5 +1,6 @@
 package com.movies.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.movies.rating.domain.RatingDto;
 import com.movies.review.domain.ReviewDto;
